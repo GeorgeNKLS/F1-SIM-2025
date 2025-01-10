@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Simulation Game 2025</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            color: #d10000;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #d10000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #a30000;
+        }
+
+        #results {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+    <script>
+        const drivers = [
+            "Max Verstappen", "Liam Lawson", "Charles Leclerc", "Lewis Hamilton",
+            "George Russell", "Andrea Kimi Antonelli", "Lando Norris", "Oscar Piastri",
+            "Fernando Alonso", "Lance Stroll", "Pierre Gasly", "Jack Doohan",
+            "Alexander Albon", "Carlos Sainz Jr.", "Esteban Ocon", "Oliver Bearman",
+            "Nico Hülkenberg", "Gabriel Bortoleto", "Yuki Tsunoda", "Isack Hadjar"
+        ];
+
+        const teams = {
+            "Red Bull Racing": ["Max Verstappen", "Liam Lawson"],
+            "Ferrari": ["Charles Leclerc", "Lewis Hamilton"],
+            "Mercedes": ["George Russell", "Andrea Kimi Antonelli"],
+            "McLaren": ["Lando Norris", "Oscar Piastri"],
+            "Aston Martin": ["Fernando Alonso", "Lance Stroll"],
+            "Alpine": ["Pierre Gasly", "Jack Doohan"],
+            "Williams": ["Alexander Albon", "Carlos Sainz Jr."],
+            "Haas": ["Esteban Ocon", "Oliver Bearman"],
+            "Sauber": ["Nico Hülkenberg", "Gabriel Bortoleto"],
+            "Racing Bulls-Honda RBPT": ["Yuki Tsunoda", "Isack Hadjar"]
+        };
+
+        const pointsSystem = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+
+        function simulateRace() {
+            const results = [...drivers].sort(() => Math.random() - 0.5); // Shuffle drivers randomly
+            return results.slice(0, 10); // Top 10 drivers
+        }
+
+        function calculateStandings() {
+            const standings = {};
+            for (let driver of drivers) {
+                standings[driver] = 0;
+            }
+
+            const teamStandings = {};
+            for (let team in teams) {
+                teamStandings[team] = 0;
+            }
+
+            const raceResults = [];
+            for (let i = 1; i <= 23; i++) {
+                const raceResult = simulateRace();
+                raceResults.push({ race: i, result: raceResult });
+
+                raceResult.forEach((driver, index) => {
+                    standings[driver] += pointsSystem[index] || 0;
+                    for (let team in teams) {
+                        if (teams[team].includes(driver)) {
+                            teamStandings[team] += pointsSystem[index] || 0;
+                        }
+                    }
+                });
+            }
+
+            return { driverStandings: standings, teamStandings, raceResults };
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("simulateButton").addEventListener("click", () => {
+                const { driverStandings, teamStandings, raceResults } = calculateStandings();
+                const resultsDiv = document.getElementById("results");
+
+                resultsDiv.innerHTML = "<h2>Race Results</h2>";
+                raceResults.forEach(race => {
+                    resultsDiv.innerHTML += `<h3>Race ${race.race}</h3>`;
+                    race.result.forEach((driver, index) => {
+                        resultsDiv.innerHTML += `<p>${index + 1}. ${driver}</p>`;
+                    });
+                });
+
+                resultsDiv.innerHTML += "<h2>Final Driver Standings</h2>";
+                Object.entries(driverStandings)
+                    .sort(([, a], [, b]) => b - a)
+                    .forEach(([driver, points], index) => {
+                        resultsDiv.innerHTML += `<p>${index + 1}. ${driver} - ${points} points</p>`;
+                    });
+
+                resultsDiv.innerHTML += "<h2>Final Team Standings</h2>";
+                Object.entries(teamStandings)
+                    .sort(([, a], [, b]) => b - a)
+                    .forEach(([team, points], index) => {
+                        resultsDiv.innerHTML += `<p>${index + 1}. ${team} - ${points} points</p>`;
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>F1 2025 Simulation Game</h1>
+        <button id="simulateButton">Simulate Season</button>
+        <div id="results"></div>
+    </div>
+</body>
+</html>

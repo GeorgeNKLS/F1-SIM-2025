@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Simulation Game 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #222;
+             color: #fff;
+        }
+        
+
+       .container {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            text-align: center;
+             background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            position: relative;
+             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+             background-color: #111;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+             transition: background 0.3s ease;
+        }
+
+         .container:hover::before {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: #ff4c4c;
+            text-shadow: 0 0 8px rgba(255, 76, 76, 0.6), 0 0 12px rgba(255, 76, 76, 0.4);
+             font-family: 'Roboto Condensed', sans-serif;
+            position: relative;
+            z-index: 1;
+             transition: transform 0.3s ease;
+             color: #fff;
+        }
+
+        .top-driver-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            width: 100%;
+        margin-bottom: 10px;
+        }
+
+        .top-driver-container .driver-image {
+            width: 50px;
+            height: 50px;
+            margin: 0 10px;
+            border-radius: 50%;
+        
+        }
+
+
+        .top-driver-container .top-driver-name {
+            font-size: 1.4rem;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .top-driver-container .driver-container:nth-child(2) {
+            margin-right: 20px;
+            align-self: flex-start;
+
+        }
+        .top-driver-container .driver-container:nth-child(1)
+        {
+            align-self: flex-end;
+        }
+        .top-driver-container .driver-container:nth-child(3)
+        {
+            margin-left: 20px;
+        align-self: flex-start;
+
+        }
+
+        .top-driver-container .driver-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        .driver-image, .team-logo {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .race-results p, .standings p
+        {
+                align-items: center;
+        }
+        .fastest-lap-top-driver
+        {
+            color: #e940ff;
+        }
+
+        .container:hover h1 {
+            transform: translateY(-2px);
+        }
+
+        button {
+            font-size: 1.4rem;
+            padding: 18px 36px;
+            background-color: #ff4c4c;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 76, 76, 0.4);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+             z-index: 1;
+        }
+
+        button:hover {
+            background-color: #e04141;
+            transform: translateY(-2px);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+             transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        button:hover::after {
+            width: 200%;
+            height: 200%;
+        }
+
+         #results {
+            margin-top: 20px;
+            text-align: left;
+            width: 100%;
+            border: 1px solid #555;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+             opacity: 0;
+            transform: translateY(20px);
+             transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        #results.show {
+            opacity: 1;
+             transform: translateY(0);
+        }
+
+         #results::-webkit-scrollbar {
+            width: 8px;
+        }
+
+         #results::-webkit-scrollbar-track {
+            background: #333;
+         }
+
+         #results::-webkit-scrollbar-thumb {
+            background: #555;
+             border-radius: 4px;
+         }
+
+        h2, h3 {
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+             font-family: 'Roboto Condensed', sans-serif;
+            opacity: 0;
+            transform: translateY(10px);
+           transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        h2.show, h3.show {
+            opacity: 1;
+            transform: translateY(0);
+         }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #ffd700;
+             border-bottom: 2px solid #ffd700;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+             color: #de0000;
+        }
+        
+        .driver-image, .team-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 8px;
+            vertical-align: middle;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .race-results p, .standings p
+        {
+            align-items: center;
+        }
+
+         .race-results p, .standings p {
+             font-size: 1rem;
+             padding: 10px 16px;
+             margin: 5px 0;
+             border-radius: 8px;
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+             opacity: 0;
+             transform: translateY(10px);
+        }
+
+        .race-results p.show, .standings p.show {
+            opacity: 1;
+             transform: translateY(0);
+        }
+
+       .race-results p:hover, .standings p:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .dnf {
+            border-radius: 15px;
+            background-color: #9b1700;
+            color: white;
+        }
+
+         .finished {
+            border-radius: 15px;
+             background-color: #32cd32;
+             color: white;
+         }
+
+        .fastest-lap {
+            color: #e940ff;
+            font-weight: bold;
+            position: relative;
+        }
+
+         .fastest-lap-comment {
+            margin-left: 5px;
+             color: #e940ff;
+         }
+
+         .driver, .team {
+            font-weight: bold;
+        }
+
+        .driver {
+            color: #ffffff;
+            cursor: pointer;
+            position: relative;
+        }
+        .driver .tooltip {
+            visibility: hidden;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            padding: 10px;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 2;
+            bottom: 120%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+             white-space: normal;
+        }
+        .driver:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+         .driver .tooltip::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #333 transparent transparent transparent;
+            }
+
+
+        .team {
+            color: #ffffff;
+        }
+
+        #audio-controls {
+             margin-top: 20px;
+        }
+
+        #audio-controls button {
+             font-size: 1rem;
+            padding: 10px 20px;
+             margin: 5px;
+            background: #333;
+             color: #fff;
+             border: 1px solid #555;
+            border-radius: 5px;
+             cursor: pointer;
+            z-index: 1;
+            transition: background-color 0.3s ease;
+        }
+
+       #audio-controls button:hover {
+            background: #555;
+        }
+
+         #loading-overlay {
+            display: none;
+             position: fixed;
+             top: 0;
+             left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+             align-items: center;
+            z-index: 1000;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+             border-top: 8px solid #ff4c4c;
+             border-radius: 50%;
+             width: 50px;
+            height: 50px;
+             animation: spin 1s linear infinite;
+         }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+         #event-log {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+             border: 1px solid #555;
+             padding: 10px;
+             border-radius: 8px;
+             text-align: left;
+        }
+
+        #event-log p {
+            margin: 3px 0;
+             font-size: 1rem;
+              opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+         #event-log p.show {
+             opacity: 1;
+             transform: translateY(0);
+         }
+        #event-log::-webkit-scrollbar {
+             width: 5px;
+         }
+         #event-log::-webkit-scrollbar-track {
+            background: #333;
+         }
+        #event-log::-webkit-scrollbar-thumb {
+            background: #555;
+           border-radius: 4px;
+         }
+         #stat-menu {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #555;
+            border-radius: 10px;
+            text-align: left;
+            max-height: 400px;
+             overflow-y: auto;
+             position: relative;
+            z-index: 1;
+             opacity: 0;
+            transform: translateY(20px);
+             transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        #stat-menu.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+          #stat-menu label, #stat-menu input {
+                display: block;
+                 margin: 8px 0;
+             }
+           #stat-menu input {
+               width: 70px;
+                padding: 5px;
+                 border: 1px solid #555;
+                border-radius: 4px;
+                color: #fff;
+                 background: #333;
+            }
+        #stat-menu::-webkit-scrollbar {
+             width: 5px;
+         }
+        #stat-menu::-webkit-scrollbar-track {
+            background: #333;
+         }
+        #stat-menu::-webkit-scrollbar-thumb {
+            background: #555;
+           border-radius: 4px;
+         }
+         #stat-menu button
+         {
+            font-size: 1rem;
+             padding: 10px 20px;
+            margin: 5px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+           border-radius: 5px;
+            cursor: pointer;
+           z-index: 1;
+            transition: background-color 0.3s ease;
+           margin-left: auto;
+            display: block;
+          }
+
+          #stat-menu button:hover {
+             background: #555;
+          }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2025 F1 Simulation</h1>
+        <button id="simulateButton">Simulate Season</button>
+           <div id="stat-menu"></div>
+        <div id="results"></div>
+        <div id="event-log"></div>
+        <div id="audio-controls">
+            <button id="playMusic">Play Music</button>
+            <button id="pauseMusic">Pause Music</button>
+        </div>
+        <div id="loading-overlay">
+            <div class="loader"></div>
+        </div>
+    </div>
+    <audio id="backgroundMusic" loop>
+        <source src="Formula 1 Theme Live in Concert by Brian Tyler.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const backgroundMusic = document.getElementById("backgroundMusic");
+            const playMusicButton = document.getElementById("playMusic");
+            const pauseMusicButton = document.getElementById("pauseMusic");
+
+            playMusicButton.addEventListener("click", () => {
+                backgroundMusic.play();
+            });
+
+            pauseMusicButton.addEventListener("click", () => {
+                backgroundMusic.pause();
+            });
+        });
+    </script>
+   <script>
+          // --- DATA ---
+        // Arrays of data used for simulation
+       const raceNames = {
+            "Bahrain": {name:"Bahrain", image: "bahrain.jpg"}, "Saudi Arabia": {name:"Saudi Arabia", image:"saudi_arabia.jpg"}, "Australia": {name:"Australia", image:"australia.jpg"}, "Japan": {name:"Japan", image:"japan.jpg"},
+            "China": {name:"China", image:"china.jpg"}, "USA Miami": {name:"USA Miami", image:"usa_miami.jpg"}, "Italy Imola": {name:"Italy Imola", image:"italy_imola.jpg"}, "Monaco": {name:"Monaco", image:"monaco.jpg"},
+            "Spain Barcelona": {name:"Spain Barcelona", image:"spain_barcelona.jpg"}, "Canada": {name:"Canada", image:"canada.jpg"}, "Austria": {name:"Austria", image:"austria.jpg"}, "United Kingdom Silverstone": {name:"United Kingdom Silverstone", image:"united_kingdom_silverstone.jpg"},
+            "Hungary": {name:"Hungary", image:"hungary.jpg"}, "Belgium Spa": {name:"Belgium Spa", image:"belgium_spa.jpg"}, "Netherlands": {name:"Netherlands", image:"netherlands.jpg"}, "Italy Monza": {name:"Italy Monza", image:"italy_monza.jpg"},
+             "Azerbaijan": {name:"Azerbaijan", image:"azerbaijan.jpg"}, "Singapore": {name:"Singapore", image:"singapore.jpg"}, "USA Austin": {name:"USA Austin", image:"usa_austin.jpg"}, "Mexico": {name:"Mexico", image:"mexico.jpg"},
+            "Brazil Sao Paulo": {name:"Brazil Sao Paulo", image:"brazil_sao_paulo.jpg"}, "USA Las Vegas": {name:"USA Las Vegas", image:"usa_las_vegas.jpg"}, "Qatar Lusai": {name:"Qatar Lusai", image:"qatar_lusai.jpg"}, "Abu Dhabi": {name:"Abu Dhabi", image:"abu_dhabi.jpg"}
+        };
+
+        const raceLaps = {
+            "Bahrain": 57, "Saudi Arabia": 50, "Australia": 58, "Japan": 53,
+            "China": 56, "USA Miami": 57, "Italy Imola": 63, "Monaco": 78,
+            "Spain Barcelona": 66, "Canada": 70, "Austria": 71, "United Kingdom Silverstone": 52,
+            "Hungary": 70, "Belgium Spa": 44, "Netherlands": 72, "Italy Monza": 53,
+            "Azerbaijan": 51, "Singapore": 62, "USA Austin": 56, "Mexico": 71,
+            "Brazil Sao Paulo": 71, "USA Las Vegas": 50, "Qatar Lusai": 57, "Abu Dhabi": 58
+        };
+
+        const lapRecords = {
+            "Bahrain": "1:31.447", "Saudi Arabia": "1:28.314", "Australia": "1:20.260", "Japan": "1:30.983",
+            "China": "1:32.238", "USA Miami": "1:29.708", "Italy Imola": "1:15.484", "Monaco": "1:12.909",
+            "Spain Barcelona": "1:18.149", "Canada": "1:13.078", "Austria": "1:05.619", "United Kingdom Silverstone": "1:27.097",
+            "Hungary": "1:16.627", "Belgium Spa": "1:46.286", "Netherlands": "1:11.097", "Italy Monza": "1:21.046",
+            "Azerbaijan": "1:43.009", "Singapore": "1:35.867", "USA Austin": "1:36.169", "Mexico": "1:17.774",
+            "Brazil Sao Paulo": "1:10.540", "USA Las Vegas": "1:35.490", "Qatar Lusai": "1:24.319", "Abu Dhabi": "1:26.103"
+        };
+
+        const raceDistances = {
+            "Bahrain": "308.238 km", "Saudi Arabia": "308.450 km", "Australia": "307.154 km", "Japan": "307.471 km",
+            "China": "305.066 km", "USA Miami": "308.370 km", "Italy Imola": "309.049 km", "Monaco": "260.286 km",
+            "Spain Barcelona": "307.236 km", "Canada": "305.270 km", "Austria": "306.452 km", "United Kingdom Silverstone": "306.198 km",
+            "Hungary": "306.633 km", "Belgium Spa": "308.052 km", "Netherlands": "306.587 km", "Italy Monza": "306.720 km",
+             "Azerbaijan": "306.049 km", "Singapore": "302.184 km", "USA Austin": "308.405 km", "Mexico": "305.354 km",
+            "Brazil Sao Paulo": "305.909 km", "USA Las Vegas": "310.500 km", "Qatar Lusai": "308.611 km", "Abu Dhabi": "306.183 km"
+        };
+
+
+        let driverStats = {
+    "Max Verstappen": { skill: 92, consistency: 90, racecraft: 91, starts: 89, overtakes: 92, defense: 98, quali: 90, fastestLapSkill: 70, image: "VERSTAPPEN.jpg" },
+    "Liam Lawson": { skill: 79, consistency: 81, racecraft: 91, starts: 82, overtakes: 73, defense: 72, quali: 75, fastestLapSkill: 68, image: "LAWSON.jpg" },
+     "Charles Leclerc": { skill: 90, consistency: 88, racecraft: 93, starts: 89, overtakes: 87, defense: 91, quali: 92, fastestLapSkill: 69, image: "LECLERC.jpg" },
+    "Lewis Hamilton": { skill: 90, consistency: 86, racecraft: 93, starts: 87, overtakes: 90, defense: 94, quali: 88, fastestLapSkill: 69, image: "HAMILTON.jpg" },
+    "George Russell": { skill: 87, consistency: 86, racecraft: 90, starts: 87, overtakes: 88, defense: 87, quali: 92, fastestLapSkill: 70, image: "RUSSEL.jpg" },
+    "Andrea Kimi Antonelli": { skill: 75, consistency: 78, racecraft: 83, starts: 75, overtakes: 80, defense: 76, quali: 83, fastestLapSkill: 65, image: "ANTONELLI.jpg" },
+    "Lando Norris": { skill: 90, consistency: 88, racecraft: 96, starts: 90, overtakes: 92, defense: 91, quali: 93, fastestLapSkill: 74, image: "NORRIS.jpg" },
+     "Oscar Piastri": { skill: 88, consistency: 87, racecraft: 96, starts: 88, overtakes: 90, defense: 88, quali: 91, fastestLapSkill: 72, image: "PIASTRI.jpg" },
+    "Fernando Alonso": { skill: 91, consistency: 94, racecraft: 92, starts: 94, overtakes: 91, defense: 94, quali: 86, fastestLapSkill: 68, image: "ALONSO.jpg" },
+    "Lance Stroll": { skill: 72, consistency: 72, racecraft: 70, starts: 74, overtakes: 71, defense: 70, quali: 71, fastestLapSkill: 55, image: "STROLL.jpg" },
+   "Pierre Gasly": { skill: 83, consistency: 82, racecraft: 84, starts: 81, overtakes: 82, defense: 82, quali: 83, fastestLapSkill: 63, image: "GASLY.jpg" },
+    "Jack Doohan": { skill: 73, consistency: 75, racecraft: 75, starts: 74, overtakes: 72, defense: 73, quali: 72, fastestLapSkill: 53, image: "DOOHAN.jpg" },
+    "Alexander Albon": { skill: 80, consistency: 82, racecraft: 85, starts: 82, overtakes: 84, defense: 83, quali: 83, fastestLapSkill: 64, image: "ALBON.jpg" },
+     "Carlos Sainz Jr.": { skill: 87, consistency: 86, racecraft: 88, starts: 85, overtakes: 86, defense: 85, quali: 87, fastestLapSkill: 65, image: "SAINZ.jpg" },
+   "Esteban Ocon": { skill: 81, consistency: 78, racecraft: 81, starts: 80, overtakes: 80, defense: 79, quali: 80, fastestLapSkill: 62, image: "OCON.jpg" },
+     "Oliver Bearman": { skill: 79, consistency: 78, racecraft: 83, starts: 77, overtakes: 78, defense: 79, quali: 82, fastestLapSkill: 61, image: "BEARMAN.jpg" },
+    "Nico Hülkenberg": { skill: 83, consistency: 81, racecraft: 79, starts: 82, overtakes: 78, defense: 80, quali: 85, fastestLapSkill: 62, image: "HULKENBERG.jpg" },
+    "Gabriel Bortoleto": { skill: 76, consistency: 74, racecraft: 76, starts: 73, overtakes: 75, defense: 73, quali: 77, fastestLapSkill: 54, image: "BORTOLETO.jpg" },
+    "Yuki Tsunoda": { skill: 80, consistency: 77, racecraft: 83, starts: 79, overtakes: 78, defense: 79, quali: 82, fastestLapSkill: 59, image: "TSUNODA.jpg" },
+     "Isack Hadjar": { skill: 76, consistency: 74, racecraft: 78, starts: 73, overtakes: 76, defense: 77, quali: 75, fastestLapSkill: 56, image: "HADJAR.jpg" }
+};
+
+
+let teams = {
+    "Red Bull Racing": { drivers: ["Max Verstappen", "Liam Lawson"], performance: 95, reliability: 94, pitstops: 93, openSlots: 0, logo: "Red Bull Logo.png" },
+    "Ferrari": { drivers: ["Charles Leclerc", "Lewis Hamilton"], performance: 93, reliability: 90, pitstops: 92, openSlots: 0, logo: "Ferrari Logo.png"  },
+    "Mercedes": { drivers: ["George Russell", "Andrea Kimi Antonelli"], performance: 90, reliability: 92, pitstops: 91, openSlots: 0, logo: "Mercedes Logo.png"  },
+     "McLaren": { drivers: ["Lando Norris", "Oscar Piastri"], performance: 92, reliability: 88, pitstops: 90, openSlots: 0, logo: "McLaren Logo.png" },
+     "Aston Martin": { drivers: ["Fernando Alonso", "Lance Stroll"], performance: 87, reliability: 87, pitstops: 88, openSlots: 0, logo: "Aston Martin Logo.png" },
+    "Alpine": { drivers: ["Pierre Gasly", "Jack Doohan"], performance: 84, reliability: 86, pitstops: 85, openSlots: 0, logo: "Alpine Logo.png" },
+    "Williams": { drivers: ["Alexander Albon", "Carlos Sainz Jr."], performance: 83, reliability: 84, pitstops: 86, openSlots: 0, logo: "Williams Logo.png" },    
+    "Haas": { drivers: ["Esteban Ocon", "Oliver Bearman"], performance: 81, reliability: 81, pitstops: 83, openSlots: 0, logo: "Haas Logo.png" },
+     "Sauber": { drivers: ["Nico Hülkenberg", "Gabriel Bortoleto"], performance: 80, reliability: 79, pitstops: 80, openSlots: 0, logo: "Sauber Logo.png" },
+    "Racing Bulls-Honda RBPT": { drivers: ["Yuki Tsunoda", "Isack Hadjar"], performance: 78, reliability: 77, pitstops: 79, openSlots: 0, logo: "RB Logo.png" }
+};
+        const pointsSystem = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+         const drivers = Object.values(teams).flatMap(team => team.drivers);
+        const teamRivalries = {
+         "Red Bull Racing": ["Ferrari", "Mercedes"],
+         "Ferrari": ["Red Bull Racing", "McLaren"],
+         "Mercedes": ["Red Bull Racing", "Aston Martin"],
+         "McLaren": ["Ferrari", "Alpine"],
+         "Aston Martin": ["Mercedes", "Williams"],
+         "Alpine": ["McLaren", "Haas"],
+        "Williams": ["Aston Martin", "Sauber"],
+         "Haas": ["Alpine", "Racing Bulls-Honda RBPT"],
+          "Sauber": ["Williams", "Racing Bulls-Honda RBPT"],
+          "Racing Bulls-Honda RBPT": ["Haas", "Sauber"]
+    };
+
+        const averageLapTime = 80;
+        const dnfReasons = [
+            "Engine Failure", "Collision Damage", "Mechanical Issue", "Suspension Failure",
+            "Electrical Problem", "Accident", "Tyre Issue", "Brake Failure"
+        ];
+        const weatherConditions = ["Dry", "Light Rain", "Heavy Rain"]
+       
+        function simulateQualifying(race) {
+              const driverQualifying = drivers.map(driver => {
+                  const team = Object.keys(teams).find(team => teams[team].drivers.includes(driver));
+                  const baseTime = averageLapTime;
+                   const driverQuali = driverStats[driver].quali;
+                   const teamPerformance = teams[team].performance;
+                 const randomVariation = (Math.random() - 0.5) * 3;
+                  const qualiTime = baseTime - (driverQuali * 0.1) - (teamPerformance * 0.1) + randomVariation;
+                 return {driver, qualiTime};
+              })
+              driverQualifying.sort((a,b) => a.qualiTime - b.qualiTime);
+            return driverQualifying;
+
+        }
+         function calculateDriverPerformance(driver, team) {
+            const driverScore = driverStats[driver];
+            const teamStats = teams[team];
+            const teamPerformanceFactor = teamStats.performance / 100;
+
+            return (
+                driverScore.skill * 0.3 +
+                 driverScore.consistency * 0.2 +
+               driverScore.racecraft * 0.2 +
+                 driverScore.starts * 0.1 +
+                driverScore.overtakes * 0.1 +
+                driverScore.defense * 0.05 +
+                 driverScore.quali * 0.05
+           ) * teamPerformanceFactor;
+        }
+
+
+          function simulateLapTime(driver, team, competingTeams, weather) {
+                const baseLapTime = averageLapTime;
+                 const driverPerformance = calculateDriverPerformance(driver, team);
+                 const driverFastestLapSkill = driverStats[driver].fastestLapSkill;
+                const randomVariation = (Math.random() - 0.5) * 5;
+                let rivalryModifier = 0;
+                let weatherModifier = 0;
+                if(competingTeams){
+                  competingTeams.forEach(rivalTeam => {
+                         if (teams[team].drivers.some(teamDriver => teams[rivalTeam].drivers.includes(teamDriver))){
+                          rivalryModifier =  (Math.random() - 0.5) * 2;
+                        }
+                   });
+                }
+                 if(weather === "Light Rain")
+                    {
+                       weatherModifier = (Math.random() * 2)
+                     }
+                     else if (weather ==="Heavy Rain") {
+                        weatherModifier = (Math.random() * 5)
+
+                    }
+                const fastestLapModifier = (Math.random() - 0.5) * ((100 - driverFastestLapSkill) * 0.01);
+                return baseLapTime - (driverPerformance * 0.1) + (fastestLapModifier * 2) + rivalryModifier + weatherModifier + randomVariation;
+            }
+
+
+         function simulatePitStop(team) {
+            const basePitStopTime = 20;
+           const teamPitstopFactor = teams[team].pitstops / 100;
+            const randomVariation = (Math.random() - 0.5) * 3;
+            return basePitStopTime - (teamPitstopFactor * 0.1) + randomVariation;
+         }
+         function applyPitStopPenalty(driverResult) {
+               const penaltyTime = 5;
+                driverResult.totalTime += penaltyTime;
+               driverResult.pitStopPenalty = true;
+           }
+
+        function updateTeamPerformance(team) {
+              const developmentChange = (Math.random() - 0.5) * 5;
+              teams[team].performance = Math.max(1, Math.min(100, teams[team].performance + developmentChange));
+        }
+         function applyEnginePenalty(driverResult) {
+           driverResult.engineChange = true;
+         }
+        function updateDriverStats(driver, pointsEarned) {
+              const statsToUpdate = ["skill", "consistency", "racecraft", "starts", "overtakes", "defense", "quali", "fastestLapSkill"];
+
+             statsToUpdate.forEach(stat => {
+               const statChange = (Math.random() * (pointsEarned * 0.02) - Math.random() * 0.01)
+                driverStats[driver][stat] = Math.max(1, Math.min(99, driverStats[driver][stat] + statChange));
+              })
+          }
+        function applySafetyCar(driverResults, laps, race){
+             if (Math.random() < 0.15) {
+                 const safetyCarLap = Math.floor(Math.random() * laps * 0.6);
+                const safetyCarDuration = 3 + Math.floor(Math.random() * 5);
+                  driverResults.forEach(driver => {
+                      if (driver.lapsCompleted >= safetyCarLap && driver.lapsCompleted <= safetyCarLap + safetyCarDuration) {
+                           driver.totalTime += (averageLapTime * 0.3);
+                           driver.safetyCar = true;
+                      }
+                  });
+
+               return {safetyCarLap, safetyCarDuration};
+            }
+              return null;
+        }
+          function simulateWeather(){
+          return weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
+        }
+
+
+
+         function simulateRace(race) {
+             const weather = simulateWeather();
+             Object.keys(teams).forEach(team => updateTeamPerformance(team));
+          const qualifyingResults = simulateQualifying(race);
+           const driverPerformance = qualifyingResults.map(qualiResult => {
+            const team = Object.keys(teams).find(team => teams[team].drivers.includes(qualiResult.driver));
+             let startingGridPosition = qualifyingResults.findIndex(item => item.driver === qualiResult.driver);
+            if (Math.random() < 0.1) {
+               applyEnginePenalty(qualiResult);
+                 startingGridPosition = Math.min(qualifyingResults.length-1 , startingGridPosition + 5);
+                }
+            let competingTeams = [];
+             Object.keys(teamRivalries).forEach(rivalTeam => {                    if(teamRivalries[rivalTeam].includes(team))
+                      {
+                        competingTeams = teamRivalries[rivalTeam];
+                      }
+               });
+            return { driver: qualiResult.driver, team, totalTime: 0, lapsCompleted: 0, pitStops: [], status: "Finished", fastestLapTime: Infinity , fastestLap: false, pointsEarned: 0, dnfReason: null, startingGridPosition: startingGridPosition, pitStopPenalty: false, engineChange: false, safetyCar: false, competingTeams: competingTeams, tyreType: "Soft", weather : weather};
+        });
+
+          driverPerformance.sort((a, b) => a.startingGridPosition - b.startingGridPosition)
+
+        const laps = raceLaps[race];
+
+         const safetyCarData = applySafetyCar(driverPerformance, laps, race);
+          
+
+        for (let lap = 1; lap <= laps; lap++) {
+            driverPerformance.forEach(driver => {
+                if (driver.status === "Finished") {
+                    let lapTime = simulateLapTime(driver.driver, driver.team, driver.competingTeams, driver.weather);
+                      if (driver.weather === "Light Rain" && driver.tyreType !== "Intermediate")
+                        {
+                           driver.tyreType = "Intermediate";
+                           lapTime = simulateLapTime(driver.driver, driver.                           team, driver.competingTeams, driver.weather);
+                           const pitStopTime = simulatePitStop(driver.team);
+                           driver.totalTime += pitStopTime;
+                            driver.pitStops.push(lap);
+
+                         }
+                        else if (driver.weather === "Heavy Rain" && driver.tyreType !== "Wet")
+                            {
+                                 driver.tyreType = "Wet";
+                                 lapTime = simulateLapTime(driver.driver, driver.team, driver.competingTeams, driver.weather);
+                                 const pitStopTime = simulatePitStop(driver.team);
+                                  driver.totalTime += pitStopTime;
+                                   driver.pitStops.push(lap);
+
+                            }
+                    driver.totalTime += lapTime;
+                    if (lapTime < driver.fastestLapTime) {
+                        driver.fastestLapTime = lapTime;
+                    }
+                    driver.lapsCompleted++;
+                    const shouldPit = Math.random() < 0.05 && driver.pitStops.length < 2;
+
+                    if (shouldPit && driver.tyreType !== "Wet" && driver.tyreType !== "Intermediate") {
+                        const pitStopTime = simulatePitStop(driver.team);
+                        if(Math.random() < 0.15)
+                         {
+                            applyPitStopPenalty(driver);
+                        }
+                        driver.totalTime += pitStopTime;
+                        driver.pitStops.push(lap);
+                    }
+                }
+            });
+        }
+
+
+        const finishedDrivers = driverPerformance.map((driver) => {
+                const dnfChance = 1 - teams[driver.team].reliability / 100;
+                if(Math.random() < dnfChance){
+                     driver.status = "DNF";
+                     driver.dnfReason = dnfReasons[Math.floor(Math.random() * dnfReasons.length)];
+                }
+                return driver;
+            });
+
+
+            // Move DNF drivers to the bottom
+            finishedDrivers.sort((a, b) => {
+                if (a.status === "DNF" && b.status !== "DNF") {
+                    return 1;
+                }
+                if (a.status !== "DNF" && b.status === "DNF") {
+                    return -1;
+                }
+                   if(a.status !== "DNF" && b.status !== "DNF"){
+                    return a.totalTime - b.totalTime;
+                 }
+                  return 0;
+
+        });
+
+
+        let fastestLapTime = Infinity;
+        let fastestLapDriver = null;
+         let fastestLapFinished = false;
+
+        finishedDrivers.forEach((driver, index) => {
+          if(driver.status !== "DNF"){
+              if (driver.fastestLapTime < fastestLapTime) {
+                  fastestLapTime = driver.fastestLapTime;
+                  fastestLapDriver = driver.driver;
+                 fastestLapFinished = true;
+            }
+         }
+        })
+
+          // Find and flag the fastest lap driver only if he finished in top 10
+         if (fastestLapFinished) {
+               finishedDrivers.forEach((result, index) => {
+                if (result.driver === fastestLapDriver && result.status !== "DNF" && index < 10) {
+                    result.fastestLap = true;
+                }
+                   if(result.status === "Finished"){
+                     result.pointsEarned = pointsSystem[index] || 0;
+                     if(result.fastestLap){
+                        result.pointsEarned++;
+                       updateDriverStats(result.driver, result.pointsEarned);
+                     }
+                    else{
+                      updateDriverStats(result.driver, result.pointsEarned);
+                     }
+                  }
+            });
+        }
+
+
+        return { finishedDrivers, safetyCarData, weather};
+
+    }
+
+
+     function calculateDriverValue(driver, driverStandings) {
+            let baseValue = driverStats[driver].skill * 0.3 +
+                            driverStats[driver].consistency * 0.2 +
+                            driverStats[driver].racecraft * 0.3 +
+                           driverStats[driver].overtakes * 0.15 +
+                           driverStats[driver].quali * 0.05;
+
+           const standings = driverStandings[driver];
+             baseValue += standings.points * 0.1 + standings.wins * 5 + standings.podiums * 2 + standings.fastestLaps * 1;
+             baseValue = Math.max(1, Math.min(100, baseValue));
+             return baseValue;
+    }
+
+    function determineTeamInterest(team, driver, driverValue) {
+        const teamPerformance = teams[team].performance;
+        const interestLevel = (driverValue * 0.6 + teamPerformance * 0.4) * (Math.random() * 0.4 + 0.8);
+        return interestLevel;
+    }
+
+      function transferDrivers(driverStandings) {
+        const potentialTransfers = [];
+         Object.keys(teams).forEach(team => teams[team].openSlots = 0);
+            for (const driver of drivers) {
+               const driverValue = calculateDriverValue(driver, driverStandings);
+                 const currentTeam = Object.keys(teams).find(team => teams[team].drivers.includes(driver));
+               const interestedTeams = Object.keys(teams)
+               .filter(team => team !== currentTeam && teams[team].openSlots < 2)
+                .map(team => ({
+                    team,
+                    interest: determineTeamInterest(team, driver, driverValue),
+                 })).sort((a, b) => b.interest - a.interest);
+               if (interestedTeams.length > 0) {
+                    potentialTransfers.push({
+                     driver,
+                       currentTeam,
+                       interestedTeams
+                   });
+              }
+          }
+
+          potentialTransfers.sort((a,b) => {
+                const valueA = calculateDriverValue(a.driver, driverStandings);
+               const valueB = calculateDriverValue(b.driver, driverStandings);
+               return valueB - valueA;
+           });
+
+          for(const transfer of potentialTransfers){
+            const bestOffer = transfer.interestedTeams[0];
+            if(bestOffer){
+              const currentTeam = teams[transfer.currentTeam]
+                 const bestOfferTeam = teams[bestOffer.team];
+                if(currentTeam.drivers.length === 2 && bestOfferTeam.openSlots < 2){
+                    let isBestOfferFull = false;
+                     if(bestOfferTeam.drivers.length === 2)
+                     {
+                         isBestOfferFull = true;
+                     }
+                    if(!isBestOfferFull){
+                      const index = currentTeam.drivers.indexOf(transfer.driver);
+                        if (index > -1) {
+                         currentTeam.drivers.splice(index, 1);
+                         bestOfferTeam.drivers.push(transfer.driver);
+                        bestOfferTeam.openSlots++;
+                         currentTeam.openSlots--;
+                        }
+                    }
+                }
+            }
+          }
+           // Ensure every team has two drivers
+           for (const teamName in teams) {
+                const team = teams[teamName];
+                while(team.drivers.length < 2){
+                     const lowestDriverValue = Object.keys(driverStats)
+                     .filter(driver => !Object.values(teams).flatMap(team => team.drivers).includes(driver))
+                     .reduce((a, b) => {
+                         const valueA = calculateDriverValue(a, driverStandings);
+                         const valueB = calculateDriverValue(b, driverStandings);
+                         return valueA < valueB ? a : b;
+                        });
+                        team.drivers.push(lowestDriverValue)
+                    }
+                 while(team.drivers.length > 2)
+                 {
+                    const highestDriverValue = team.drivers.reduce((a, b) => {
+                        const valueA = calculateDriverValue(a, driverStandings);
+                        const valueB = calculateDriverValue(b, driverStandings);
+                        return valueA > valueB ? a : b;
+                    });
+                    const index = team.drivers.indexOf(highestDriverValue);
+                    if(index > -1)
+                     {
+                       team.drivers.splice(index, 1);
+                     }
+                 }
+          }
+    }
+
+       function calculateStandings() {
+             const standings = drivers.reduce((acc, driver) => {
+                acc[driver] = { points: 0, wins: 0, podiums: 0, fastestLaps: 0, dnf: 0 };
+               return acc;
+            }, {});
+
+            const teamStandings = Object.keys(teams).reduce((acc, team) => {
+              acc[team] = 0;
+               return acc;
+            }, {});
+
+            const raceResults = Object.keys(raceNames).map(race => {
+                const { finishedDrivers, safetyCarData, weather } = simulateRace(race);
+
+               finishedDrivers.forEach((res, index) => {
+                     if (res.status === "Finished") {
+                           standings[res.driver].points += pointsSystem[index] || 0;
+                           if (index === 0) {
+                              standings[res.driver].wins++;
+                           }
+                            if (index < 3) {
+                               standings[res.driver].podiums++;
+                           }
+                           for (const team in teams) {
+                                if (teams[team].drivers.includes(res.driver)) {
+                                    teamStandings[team] += pointsSystem[index] || 0;
+                                     break;
+                                 }
+                           }
+                            // Add a point if the driver has the fastest lap and finished in top 10
+                            if (res.fastestLap) {
+                              standings[res.driver].points += 1;
+                              standings[res.driver].fastestLaps++;
+                             }
+                      }
+                    else if (res.status === "DNF") {
+                        standings[res.driver].dnf++;
+                   }
+               });
+               return { race, result : finishedDrivers, safetyCarData, weather };
+            });
+            return { driverStandings: standings, teamStandings, raceResults };
+         }
+
+        function createStatMenu() {
+            const statMenuDiv = document.getElementById('stat-menu');
+             let statMenuHTML = "<h2>Driver Stat Adjustment</h2>";
+             for (const driver in driverStats) {
+                 statMenuHTML += `<h3>${driver}</h3>`;
+                for (const stat in driverStats[driver]) {
+                    statMenuHTML += `<label for="${driver}-${stat}">${stat}:</label>
+                                     <input type="number" id="${driver}-${stat}" value="${driverStats[driver][stat]}" min="1" max="99">`;
+                 }
+            }
+           statMenuHTML += `<button id="applyStatChanges">Apply Changes</button>`
+          statMenuDiv.innerHTML = statMenuHTML;
+
+            document.getElementById('applyStatChanges').addEventListener('click', () => {
+                 for (const driver in driverStats) {
+                      for(const stat in driverStats[driver]){
+                           const input = document.getElementById(`${driver}-${stat}`);
+                           const value = parseInt(input.value, 10);
+                            if(value >= 1 && value <= 99)
+                                {
+                                 driverStats[driver][stat] = value;
+                               }
+                            else {
+                                alert("Please provide a valid value between 1 and 99");
+                                return;
+                            }
+                      }
+                 }
+                 alert("Stats Updated!")
+                   statMenuDiv.classList.remove("show");
+             })
+           statMenuDiv.classList.add('show');
+        }
+           
+        function displayResults(driverStandings, teamStandings, raceResults, resultsDiv, loadingOverlay, statMenuDiv) {
+    resultsDiv.innerHTML = "";
+    let resultsHTML = "<h2>Race Results:</h2>";
+
+    raceResults.forEach(raceData => {
+        const lapRecord = lapRecords[raceData.race] || "N/A";
+        const raceDistance = raceDistances[raceData.race] || "N/A";
+        const safetyCarInfo = raceData.safetyCarData;
+        const weather = raceData.weather;
+           const raceName = raceNames[raceData.race].name;
+        const safetyCarText = safetyCarInfo ? ` - Safety Car on lap ${safetyCarInfo.safetyCarLap} for ${safetyCarInfo.safetyCarDuration} laps`: '';
+        resultsHTML += `<h3 class="show">Race: ${raceName} - Lap Record: ${lapRecord} - Distance: ${raceDistance} - Weather: ${weather}${safetyCarText}</h3>`;
+            const qualifyingResults = simulateQualifying(raceData.race);
+         resultsHTML += `<p class = 'show'><b>Qualifying Results</b></p>`;
+         qualifyingResults.forEach((driver,index) => {
+             resultsHTML += `<p class="show"><b>${index + 1}</b> - ${driver.driver} </p>`;
+          });
+
+        
+        const topThree = raceData.result.slice(0, 3);
+         if(topThree && topThree.length > 0)
+         {
+           resultsHTML += '<div class="top-driver-container">';
+            topThree.forEach((result, index) => {
+             const driverImage = driverStats[result.driver].image || 'default_driver.png';
+               const fastestLapClass = result.fastestLap ? 'fastest-lap-top-driver' : '';
+            resultsHTML += `
+            <div class ="driver-container">
+                <img src="${driverImage}" alt="${result.driver}" class="driver-image">
+                <span class = 'top-driver-name ${fastestLapClass}'>${result.driver}</span>
+                </div>
+            `
+         })
+        resultsHTML += '</div>';
+
+         }
+         // Position Changes
+          const startingPositions = {};
+         const positionChanges = {};
+        raceData.result.forEach((result, index) => {
+        startingPositions[result.driver] = result.startingGridPosition;
+         });
+
+        raceData.result.forEach((result, index) => {
+        const startingPosition = startingPositions[result.driver]
+        const finishingPosition = index;
+          positionChanges[result.driver] = startingPosition - finishingPosition;
+        });
+         topThree.forEach((result, index) => {
+            const fastestLapTime = result.fastestLapTime !== Infinity ?  (result.fastestLapTime).toFixed(3)  : 'N/A';
+            const statusClass = result.status === "DNF" ? 'dnf' : 'finished';
+            const fastestLapClass = result.fastestLap ? 'fastest-lap' : '';
+             const dnfReasonText = result.status === "DNF" ? ` - Reason: ${result.dnfReason}` : '';
+            const pitStopPenaltyText = result.pitStopPenalty ? ` - Pit Stop Penalty` : '';
+            const engineChangeText = result.engineChange ? ` - Engine Change` : '';
+             const driverImage = driverStats[result.driver].image || 'default_driver.png';
+            const positionChangeText = positionChanges[result.driver] > 0 ? ` (+${positionChanges[result.driver]})` : positionChanges[result.driver] < 0 ? ` (${positionChanges[result.driver]})` : " (0)";
+
+
+             resultsHTML += `<p class="show ${statusClass} ${fastestLapClass}" style="animation-delay: ${index * 0.05}s">
+                           ${index + 1}.  <img src="${driverImage}" alt="${result.driver}" class="driver-image">
+                           <span class="driver" data-driver="${result.driver}">${result.driver}
+                            <span class="tooltip">
+                            Skill: ${driverStats[result.driver].skill}<br>
+                             Consistency: ${driverStats[result.driver].consistency}<br>
+                             Racecraft: ${driverStats[result.driver].racecraft}<br>
+                             Starts: ${driverStats[result.driver].starts}<br>
+                             Overtakes: ${driverStats[result.driver].overtakes}<br>
+                             Defense: ${driverStats[result.driver].defense}<br>
+                             Qualifying: ${driverStats[result.driver].quali}<br>
+                            Fastest Lap Skill: ${driverStats[result.driver].fastestLapSkill}
+                            </span></span> - Fastest Lap: ${fastestLapTime} - Pit Stops: ${result.pitStops.length} - Points: ${result.pointsEarned} ${dnfReasonText} ${pitStopPenaltyText} ${engineChangeText} ${result.fastestLap ? "<span class='fastest-lap-comment'>(Fastest Lap)</span>" : ""} ${positionChangeText}</p>`;
+        });
+          raceData.result.slice(3).forEach((result, index) => {
+            const fastestLapTime = result.fastestLapTime !== Infinity ?  (result.fastestLapTime).toFixed(3)  : 'N/A';
+            const statusClass = result.status === "DNF" ? 'dnf' : 'finished';
+            const fastestLapClass = result.fastestLap ? 'fastest-lap' : '';
+             const dnfReasonText = result.status === "DNF" ? ` - Reason: ${result.dnfReason}` : '';
+            const pitStopPenaltyText = result.pitStopPenalty ? ` - Pit Stop Penalty` : '';
+            const engineChangeText = result.engineChange ? ` - Engine Change` : '';
+             const driverImage = driverStats[result.driver].image || 'default_driver.png';
+            const positionChangeText = positionChanges[result.driver] > 0 ? ` (+${positionChanges[result.driver]})` : positionChanges[result.driver] < 0 ? ` (${positionChanges[result.driver]})` : " (0)";
+
+            resultsHTML += `<p class="show ${statusClass} ${fastestLapClass}" style="animation-delay: ${index * 0.05}s">
+                           ${index + 4}.  <img src="${driverImage}" alt="${result.driver}" class="driver-image">
+                           <span class="driver" data-driver="${result.driver}">${result.driver}
+                            <span class="tooltip">
+                            Skill: ${driverStats[result.driver].skill}<br>
+                             Consistency: ${driverStats[result.driver].consistency}<br>
+                             Racecraft: ${driverStats[result.driver].racecraft}<br>
+                             Starts: ${driverStats[result.driver].starts}<br>
+                             Overtakes: ${driverStats[result.driver].overtakes}<br>
+                             Defense: ${driverStats[result.driver].defense}<br>
+                             Qualifying: ${driverStats[result.driver].quali}<br>
+                            Fastest Lap Skill: ${driverStats[result.driver].fastestLapSkill}
+                            </span></span> - Fastest Lap: ${fastestLapTime} - Pit Stops: ${result.pitStops.length} - Points: ${result.pointsEarned} ${dnfReasonText} ${pitStopPenaltyText} ${engineChangeText} ${result.fastestLap ? "<span class='fastest-lap-comment'>(Fastest Lap)</span>" : ""} ${positionChangeText}</p>`;
+        });
+    });
+
+    resultsHTML += "<h2 class='show' style='animation-delay: 0.1s'>Final Driver Standings</h2>";
+    Object.entries(driverStandings)
+        .sort(([, a], [, b]) => b.points - a.points)
+        .forEach(([driver, stats], index) => {
+             const driverImage = driverStats[driver].image || 'default_driver.png';
+            resultsHTML += `<p class='show driver' style="animation-delay: ${index * 0.05}s">${index + 1}. <img src="${driverImage}" alt="${driver}" class="driver-image"> <span class="driver" data-driver="${driver}">${driver}
+             <span class="tooltip">
+              Skill: ${driverStats[driver].skill}<br>
+             Consistency: ${driverStats[driver].consistency}<br>
+            Racecraft: ${driverStats[driver].racecraft}<br>
+            Starts: ${driverStats[driver].starts}<br>
+              Overtakes: ${driverStats[driver].overtakes}<br>
+             Defense: ${driverStats[driver].defense}<br>
+             Qualifying: ${driverStats[driver].quali}<br>
+            Fastest Lap Skill: ${driverStats[driver].fastestLapSkill}
+            </span></span> - ${stats.points} points <br> Wins: ${stats.wins}, Podiums: ${stats.podiums}, Fastest Laps: ${stats.fastestLaps}, DNFs: ${stats.dnf}</p>`;
+    });
+
+
+    resultsHTML += "<h2 class='show' style='animation-delay: 0.1s'>Final Team Standings</h2>";
+    Object.entries(teamStandings)
+        .sort(([, a], [, b]) => b - a)
+        .forEach(([team, points], index) => {
+             const teamLogo = teams[team].logo || 'default_team.png';
+            resultsHTML += `<p class='show team' style="animation-delay: ${index * 0.05}s">${index + 1}.  <img src="${teamLogo}" alt="${team}" class="team-logo">  ${team} - ${points} points</p>`;
+    });
+
+    resultsHTML += "<h2 class='show' style='animation-delay: 0.1s'>Driver Transfers</h2>";
+    Object.keys(teams).forEach(team => {
+         resultsHTML += `<p class='show team' style="animation-delay: 0.05s"><b> <img src="${teams[team].logo}" alt="${team}" class="team-logo"> ${team}:</b> ${teams[team].drivers.join(', ')} </p>`;
+    })
+
+    resultsDiv.innerHTML = resultsHTML;
+    loadingOverlay.style.display = "none";
+    resultsDiv.classList.add('show');
+    const elements = resultsDiv.querySelectorAll('h2, h3, p');
+    elements.forEach((element)=> {
+        element.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+     });
+}
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const simulateButton = document.getElementById("simulateButton");
+            const resultsDiv = document.getElementById("results");
+            const loadingOverlay = document.getElementById("loading-overlay");
+           const statMenuDiv = document.getElementById('stat-menu');
+
+           createStatMenu();
+           simulateButton.addEventListener("click", () => {
+                 loadingOverlay.style.display = "flex";
+                 resultsDiv.classList.remove('show');
+                  statMenuDiv.classList.remove("show");
+             setTimeout(() => {
+                  const { driverStandings, teamStandings, raceResults } = calculateStandings();
+                     transferDrivers(driverStandings);
+                     displayResults(driverStandings, teamStandings, raceResults, resultsDiv, loadingOverlay, statMenuDiv);
+                const container = document.querySelector('.container');
+                 const firstRace = raceResults[0];
+                 if (firstRace && firstRace.race)
+                    {
+                      const raceImage = raceNames[firstRace.race].image;
+                       container.style.backgroundImage = `url(${raceImage})`;
+
+                    }
+              }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
